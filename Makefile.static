@@ -195,7 +195,7 @@ ifdef WIN32
     AWK := ../tools/win32/gawk.exe
   endif
   LN_S=ln -s -f
-  CFLAGS+=-DWIN32
+  CFLAGS+=-DWIN32 -D__NO_MINGW_LFS=1 -DOPENSSL_SYS_MSDOS=1
 endif
 
 $(shell for lnk in $(LINKFILES); do \
