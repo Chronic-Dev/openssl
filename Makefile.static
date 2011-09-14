@@ -4,10 +4,126 @@ CFLAGS=-m32 -I. -Iinclude -Icrypto -Icrypto/md5 -Icrypto/rc4 -Icrypto/asn1 -Icry
 
 ASMFLAGS=-m32 -O2
 
+ifdef AWK_PATH
+  AWK := $(AWK_PATH)
+else
+  AWK := $(shell which awk)
+endif
+
 UNAME := $(shell uname)
 PLATFORM := $(shell uname -m)
 
+LINKFILES = \
+	../crypto/md4/md4.c:./apps/md4.c \
+	../../crypto/aes/aes.h:./include/openssl/aes.h \
+	../../crypto/asn1/asn1.h:./include/openssl/asn1.h \
+	../../crypto/asn1/asn1_mac.h:./include/openssl/asn1_mac.h \
+	../../crypto/asn1/asn1t.h:./include/openssl/asn1t.h \
+	../../crypto/bio/bio.h:./include/openssl/bio.h \
+	../../crypto/bf/blowfish.h:./include/openssl/blowfish.h \
+	../../crypto/bn/bn.h:./include/openssl/bn.h \
+	../../crypto/buffer/buffer.h:./include/openssl/buffer.h \
+	../../crypto/camellia/camellia.h:./include/openssl/camellia.h \
+	../../crypto/cast/cast.h:./include/openssl/cast.h \
+	../../crypto/cms/cms.h:./include/openssl/cms.h \
+	../../crypto/comp/comp.h:./include/openssl/comp.h \
+	../../crypto/conf/conf_api.h:./include/openssl/conf_api.h \
+	../../crypto/conf/conf.h:./include/openssl/conf.h \
+	../../crypto/crypto.h:./include/openssl/crypto.h \
+	../../crypto/des/des.h:./include/openssl/des.h \
+	../../crypto/des/des_old.h:./include/openssl/des_old.h \
+	../../crypto/dh/dh.h:./include/openssl/dh.h \
+	../../crypto/dsa/dsa.h:./include/openssl/dsa.h \
+	../../crypto/dso/dso.h:./include/openssl/dso.h \
+	../../ssl/dtls1.h:./include/openssl/dtls1.h \
+	../../crypto/ebcdic.h:./include/openssl/ebcdic.h \
+	../../crypto/ecdh/ecdh.h:./include/openssl/ecdh.h \
+	../../crypto/ecdsa/ecdsa.h:./include/openssl/ecdsa.h \
+	../../crypto/ec/ec.h:./include/openssl/ec.h \
+	../../crypto/engine/engine.h:./include/openssl/engine.h \
+	../../e_os2.h:./include/openssl/e_os2.h \
+	../../crypto/err/err.h:./include/openssl/err.h \
+	../../crypto/evp/evp.h:./include/openssl/evp.h \
+	../../crypto/hmac/hmac.h:./include/openssl/hmac.h \
+	../../crypto/idea/idea.h:./include/openssl/idea.h \
+	../../crypto/krb5/krb5_asn.h:./include/openssl/krb5_asn.h \
+	../../ssl/kssl.h:./include/openssl/kssl.h \
+	../../crypto/lhash/lhash.h:./include/openssl/lhash.h \
+	../../crypto/md4/md4.h:./include/openssl/md4.h \
+	../../crypto/md5/md5.h:./include/openssl/md5.h \
+	../../crypto/mdc2/mdc2.h:./include/openssl/mdc2.h \
+	../../crypto/modes/modes.h:./include/openssl/modes.h \
+	../../crypto/objects/objects.h:./include/openssl/objects.h \
+	../../crypto/objects/obj_mac.h:./include/openssl/obj_mac.h \
+	../../crypto/ocsp/ocsp.h:./include/openssl/ocsp.h \
+	../../crypto/opensslconf.h:./include/openssl/opensslconf.h \
+	../../crypto/opensslv.h:./include/openssl/opensslv.h \
+	../../crypto/ossl_typ.h:./include/openssl/ossl_typ.h \
+	../../crypto/pem/pem2.h:./include/openssl/pem2.h \
+	../../crypto/pem/pem.h:./include/openssl/pem.h \
+	../../crypto/pkcs12/pkcs12.h:./include/openssl/pkcs12.h \
+	../../crypto/pkcs7/pkcs7.h:./include/openssl/pkcs7.h \
+	../../crypto/pqueue/pqueue.h:./include/openssl/pqueue.h \
+	../../crypto/rand/rand.h:./include/openssl/rand.h \
+	../../crypto/rc2/rc2.h:./include/openssl/rc2.h \
+	../../crypto/rc4/rc4.h:./include/openssl/rc4.h \
+	../../crypto/ripemd/ripemd.h:./include/openssl/ripemd.h \
+	../../crypto/rsa/rsa.h:./include/openssl/rsa.h \
+	../../crypto/stack/safestack.h:./include/openssl/safestack.h \
+	../../crypto/seed/seed.h:./include/openssl/seed.h \
+	../../crypto/sha/sha.h:./include/openssl/sha.h \
+	../../ssl/ssl23.h:./include/openssl/ssl23.h \
+	../../ssl/ssl2.h:./include/openssl/ssl2.h \
+	../../ssl/ssl3.h:./include/openssl/ssl3.h \
+	../../ssl/ssl.h:./include/openssl/ssl.h \
+	../../crypto/stack/stack.h:./include/openssl/stack.h \
+	../../crypto/symhacks.h:./include/openssl/symhacks.h \
+	../../ssl/tls1.h:./include/openssl/tls1.h \
+	../../crypto/ts/ts.h:./include/openssl/ts.h \
+	../../crypto/txt_db/txt_db.h:./include/openssl/txt_db.h \
+	../../crypto/ui/ui_compat.h:./include/openssl/ui_compat.h \
+	../../crypto/ui/ui.h:./include/openssl/ui.h \
+	../../crypto/whrlpool/whrlpool.h:./include/openssl/whrlpool.h \
+	../../crypto/x509/x509.h:./include/openssl/x509.h \
+	../../crypto/x509v3/x509v3.h:./include/openssl/x509v3.h \
+	../../crypto/x509/x509_vfy.h:./include/openssl/x509_vfy.h \
+	../crypto/bf/bftest.c:./test/bftest.c \
+	../crypto/bn/bntest.c:./test/bntest.c \
+	../crypto/cast/casttest.c:./test/casttest.c \
+	../crypto/des/destest.c:./test/destest.c \
+	../crypto/dh/dhtest.c:./test/dhtest.c \
+	../crypto/dsa/dsatest.c:./test/dsatest.c \
+	../crypto/ecdh/ecdhtest.c:./test/ecdhtest.c \
+	../crypto/ecdsa/ecdsatest.c:./test/ecdsatest.c \
+	../crypto/ec/ectest.c:./test/ectest.c \
+	../crypto/engine/enginetest.c:./test/enginetest.c \
+	../crypto/evp/evp_test.c:./test/evp_test.c \
+	../crypto/bn/exptest.c:./test/exptest.c \
+	../crypto/hmac/hmactest.c:./test/hmactest.c \
+	../crypto/idea/ideatest.c:./test/ideatest.c \
+	dummytest.c:./test/jpaketest.c \
+	dummytest.c:./test/md2test.c \
+	../crypto/md4/md4test.c:./test/md4test.c \
+	../crypto/md5/md5test.c:./test/md5test.c \
+	../crypto/mdc2/mdc2test.c:./test/mdc2test.c \
+	../crypto/rand/randtest.c:./test/randtest.c \
+	../crypto/rc2/rc2test.c:./test/rc2test.c \
+	../crypto/rc4/rc4test.c:./test/rc4test.c \
+	dummytest.c:./test/rc5test.c \
+	../crypto/ripemd/rmdtest.c:./test/rmdtest.c \
+	../crypto/rsa/rsa_test.c:./test/rsa_test.c \
+	../crypto/sha/sha1test.c:./test/sha1test.c \
+	../crypto/sha/sha256t.c:./test/sha256t.c \
+	../crypto/sha/sha512t.c:./test/sha512t.c \
+	../crypto/sha/shatest.c:./test/shatest.c \
+	../ssl/ssltest.c:./test/ssltest.c \
+	../crypto/whrlpool/wp_test.c:./test/wp_test.c \
+
 ifeq ($(UNAME), Darwin)
+  ifeq ($(AWK),)
+    AWK := ../tools/osx/awk
+  endif
+  LN_S=ln -f -s
   check_arch = $(shell if as -arch $(1) -o /dev/null < /dev/null > /dev/null; then echo yes; else echo no; fi)
   ifeq ($(call check_arch,i386), yes)
     CFLAGS+=-arch i386
@@ -36,6 +152,10 @@ ifeq ($(UNAME), Darwin)
 endif
 
 ifeq ($(UNAME), Linux)
+  ifeq ($(AWK),)
+     $(error Please install awk for your distribution)
+  endif
+  LN_S=ln -f -s
   ifeq ($(PLATFORM), x86_64)
     PLATFORM:=x86
   endif
@@ -71,8 +191,16 @@ ifeq ($(findstring MINGW,$(UNAME)), MINGW)
   CC=gcc
 endif
 ifdef WIN32
+  ifeq ($(AWK),)
+    AWK := ../tools/win32/gawk.exe
+  endif
+  LN_S=ln -s -f
   CFLAGS+=-DWIN32
 endif
+
+$(shell for lnk in $(LINKFILES); do \
+	  $(LN_S) `echo $$lnk |${AWK} '{ split($$0, a, ":"); print a[1]; print a[2] }'`; \
+	done)
 
 # TODO
 # CRYPTO_MD5_ASM_OBJ=crypto/md5/asm/md5-x86_64.o
