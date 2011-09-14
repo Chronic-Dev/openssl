@@ -8,6 +8,7 @@ UNAME := $(shell uname)
 PLATFORM := $(shell uname -m)
 
 ifeq ($(UNAME), Darwin)
+  check_arch = $(shell if as -arch $(1) -o /dev/null < /dev/null > /dev/null; then echo yes; else echo no; fi)
   ifeq ($(call check_arch,i386), yes)
     CFLAGS+=-arch i386
     CRYPTO_CPUID_SRC=crypto/x86cpuid-osx.S
