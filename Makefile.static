@@ -195,6 +195,14 @@ ifdef WIN32
     AWK := ../tools/win32/gawk.exe
   endif
   LN_S=ln -s -f
+  CRYPTO_CPUID_SRC=crypto/x86cpuid-win32.S
+  CRYPTO_CPUID_OBJ=crypto/x86cpuid.o
+  CRYPTO_AES_ASM_SRC=crypto/aes/asm/aes-x86-win32.S
+  CRYPTO_AES_ASM_OBJ=crypto/aes/asm/aes-x86.o
+  CRYPTO_BN_ASM_GCC=crypto/bn/asm/x86-gcc-win32.S
+  CRYPTO_BN_ASM_MONT=crypto/bn/asm/x86-mont-win32.S
+  CRYPTO_BN_ASM_GCC_OBJ=crypto/bn/asm/x86-gcc.o
+  CRYPTO_BN_ASM_MONT_OBJ=crypto/bn/asm/x86-mont.o 
   CFLAGS+=-DWIN32 -D__NO_MINGW_LFS=1 -DOPENSSL_SYS_MSDOS=1
 endif
 
