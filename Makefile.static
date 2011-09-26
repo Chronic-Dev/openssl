@@ -244,7 +244,6 @@ objects_crypto = \
 	crypto/hmac/hm_pmeth.o \
 	crypto/ripemd/rmd_dgst.o \
 	crypto/ripemd/rmd_one.o \
-	crypto/des/des.o \
 	crypto/des/set_key.o \
 	crypto/des/ecb_enc.o \
 	crypto/des/cbc_enc.o \
@@ -286,8 +285,6 @@ objects_crypto = \
 	crypto/rc2/rc2ofb64.o \
 	crypto/rc4/rc4_enc.o \
 	crypto/rc4/rc4_skey.o \
-	crypto/rc4/rc4.o \
-	crypto/rc4/rc4speed.o \
 	crypto/bf/bf_skey.o \
 	crypto/bf/bf_ecb.o \
 	crypto/bf/bf_enc.o \
@@ -465,7 +462,6 @@ objects_crypto = \
 	crypto/err/err_prn.o \
 	crypto/idea/i_cbc.o \
 	crypto/idea/i_cfb64.o \
-	crypto/idea/idea_spd.o \
 	crypto/idea/i_ecb.o \
 	crypto/idea/i_ofb64.o \
 	crypto/idea/i_skey.o \
