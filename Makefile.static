@@ -240,6 +240,8 @@ objects_crypto = \
 	crypto/md5/md5_dgst.o \
 	crypto/md5/md5_one.o \
 	$(CRYPTO_MD5_ASM_OBJ) \
+	crypto/mdc2/mdc2dgst.o \
+	crypto/mdc2/mdc2_one.o \
 	crypto/sha/sha_dgst.o \
 	crypto/sha/sha1dgst.o \
 	crypto/sha/sha_one.o \
@@ -502,6 +504,7 @@ objects_crypto = \
 	crypto/evp/m_ripemd.o \
 	crypto/evp/m_ecdsa.o \
 	crypto/evp/m_sigver.o \
+	crypto/evp/m_wp.o \
 	crypto/evp/pmeth_lib.o \
 	crypto/evp/pmeth_fn.o \
 	crypto/evp/pmeth_gn.o \
@@ -725,6 +728,9 @@ objects_crypto = \
 	crypto/ui/ui_compat.o \
 	crypto/krb5/krb5_asn.o \
 	crypto/pqueue/pqueue.o \
+	crypto/ts/ts_err.o \
+	crypto/whrlpool/wp_block.o \
+	crypto/whrlpool/wp_dgst.o \
 	engines/e_4758cca.o \
 	engines/e_aep.o \
 	engines/e_atalla.o \
@@ -735,6 +741,24 @@ objects_crypto = \
 	engines/e_sureware.o \
 	engines/e_ubsec.o \
 	engines/e_capi.o \
+	engines/e_padlock.o \
+	engines/ccgost/e_gost_err.o \
+	engines/ccgost/gost2001.o \
+	engines/ccgost/gost2001_keyx.o \
+	engines/ccgost/gost89.o \
+	engines/ccgost/gost94_keyx.o \
+	engines/ccgost/gost_ameth.o \
+	engines/ccgost/gost_asn1.o \
+	engines/ccgost/gost_crypt.o \
+	engines/ccgost/gost_ctl.o \
+	engines/ccgost/gost_eng.o \
+	engines/ccgost/gost_keywrap.o \
+	engines/ccgost/gost_md.o \
+	engines/ccgost/gost_params.o \
+	engines/ccgost/gost_pmeth.o \
+	engines/ccgost/gost_sign.o \
+	engines/ccgost/gosthash.o \
+	engines/ccgost/gostsum.o \
 
 objects_ssl = \
 	ssl/s2_meth.o \
