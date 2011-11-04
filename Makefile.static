@@ -758,7 +758,6 @@ objects_crypto = \
 	engines/ccgost/gost_pmeth.o \
 	engines/ccgost/gost_sign.o \
 	engines/ccgost/gosthash.o \
-	engines/ccgost/gostsum.o \
 
 objects_ssl = \
 	ssl/s2_meth.o \
